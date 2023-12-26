@@ -2,79 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:sms_advanced/sms_advanced.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ListTile Example',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  SmsQuery query = new SmsQuery();
-  final List<String> items = [
-    'MPESA Message 1',
-    'MPESA Message 2',
-    'MPESA Message 3',
-    'MPESA Message 4',
-    'MPESA Message 5',
-  ];
+  List<SmsMessage> mpesaMessages = [];
 
-  // Track the tapped item index and its corresponding color
-  int tappedIndex = -1;
+  @override
+  void initState() {
+    super.initState();
+    _loadMpesaMessages();
+  }
+
+  Future<void> _loadMpesaMessages() async {
+    // Query the SMS inbox
+    List<SmsMessage> allMessages = await SmsQuery().querySms(
+      kinds: [SmsQueryKind.Inbox],
+    );
+
+    // Filter M-Pesa messages based on keyword or pattern
+    List<SmsMessage> mpesaMessages = allMessages
+        .where((message) =>
+            message.body?.toLowerCase().contains('mpesa') ?? false)
+        .toList();
+
+    setState(() {
+      this.mpesaMessages = mpesaMessages;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-        title: Text("PESAWAY SMS QUERY"),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: <Color>[Colors.blue, Colors.blue]),
-          ),
-        ),
+      appBar: AppBar(
+        title: Text('M-Pesa Messages'),
       ),
       body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) {
+        itemCount: mpesaMessages.length,
+        itemBuilder: (context, index) {
           return ListTile(
-            leading: Icon(
-              Icons.circle,
-              color: tappedIndex == index ? Colors.blue : null,
-            ),
-            title: Text(items[index]),
-            subtitle: Text('Subtitle ${index + 1}'),
-            trailing: const Icon(Icons.arrow_forward),
-            onTap: () {
-              // Update the tapped item index
-              setState(() {
-                tappedIndex = index;
-              });
-            },
+            title: Text(mpesaMessages[index].address ?? ''),
+            subtitle: Text(mpesaMessages[index].body ?? ''),
           );
         },
       ),
     );
   }
 }
-
