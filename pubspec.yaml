@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sms_advanced: ^1.0.1
+  sms_autofill: ^2.0.0
 
 
 

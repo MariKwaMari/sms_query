@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sms_advanced/sms_advanced.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,45 +20,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<SmsMessage> mpesaMessages = [];
+  String _smsCode = '';
 
   @override
   void initState() {
     super.initState();
-    _loadMpesaMessages();
+    _listenForSms();
   }
 
-  Future<void> _loadMpesaMessages() async {
-    // Query the SMS inbox
-    List<SmsMessage> allMessages = await SmsQuery().querySms(
-      kinds: [SmsQueryKind.Inbox],
-    );
-
-    // Filter M-Pesa messages based on keyword or pattern
-    List<SmsMessage> mpesaMessages = allMessages
-        .where((message) =>
-            message.body?.toLowerCase().contains('mpesa') ?? false)
-        .toList();
-
-    setState(() {
-      this.mpesaMessages = mpesaMessages;
-    });
+  void _listenForSms() async {
+    await SmsAutoFill().listenForCode;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('M-Pesa Messages'),
+        title: Text('SMS Reader'),
       ),
-      body: ListView.builder(
-        itemCount: mpesaMessages.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(mpesaMessages[index].address ?? ''),
-            subtitle: Text(mpesaMessages[index].body ?? ''),
-          );
-        },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'SMS Code:',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 10),
+            Text(
+              _smsCode,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
