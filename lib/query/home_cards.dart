@@ -1,61 +1,67 @@
 import 'package:flutter/material.dart';
 
-import 'home_screen.dart';
-
-class Homecards extends StatelessWidget{
+class HomeCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var IconColor = HexColor("#2CA7C9");
-    var BgColor = HexColor("#B71918");
-    var hvColor = HexColor("#2896B4");
-    var Icolor = HexColor("#83E3FD");
+    var bgColor = Colors.red;
+    var hoverColor = Colors.lightBlue;
+    var iconColor = Colors.lightBlueAccent;
+
     return Scaffold(
-      body: CustomScrollView(
-        primary: false,
-        slivers: <Widget>[
-          SliverPadding(
-            padding: const EdgeInsets.all(20),
-            sliver: SliverGrid.count(
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: hvColor,
-                    ),
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  // color: Colors.green[100],
-                  child: const Text("Mpesa Received"),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.green[200],
-                  child: const Text('Heed not the rabble'),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.green[300],
-                  child: const Text('Sound of screams but the'),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  color: Colors.green[400],
-                  child: const Text('Who scream'),
-                ),
+      appBar: AppBar(
+        title: Text('Work made easy'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: GridView.count(
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          crossAxisCount: 2,
+          children: <Widget>[
+            _buildCard('Mpesa Received', iconColor, bgColor),
+            _buildCard('Heed not the rabble', iconColor, bgColor),
+            _buildCard('Sound of screams but the', iconColor, bgColor),
+            _buildCard('Who scream', iconColor, bgColor),
+          ],
+        ),
+      ),
+    );
+  }
 
-
-              ],
+  Widget _buildCard(String text, Color iconColor, Color bgColor) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: bgColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.payment,
+            size: 40,
+            color: iconColor,
+          ),
+          SizedBox(height: 10),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
-  
 }
-  
