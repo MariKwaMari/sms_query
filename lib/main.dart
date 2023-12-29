@@ -66,14 +66,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFFFFFFFF);
     return MaterialApp(
       title: 'Flutter SMS Inbox App',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primaryColor: primaryColor,
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Pesaway SMS Retriever'),
+          backgroundColor: primaryColor,
+          title: Image.asset('assets/images/title.png', width: 160,
+            height:40,
+            fit: BoxFit.cover,),
         ),
         body: Container(
           padding: const EdgeInsets.all(10.0),
