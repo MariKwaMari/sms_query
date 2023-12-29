@@ -6,9 +6,10 @@ import 'home_cards.dart';
 
 class HexColor extends Color {
   static int _getColor(String hex) {
-    String formattedHex =  "FF" + hex.toUpperCase().replaceAll("#", "");
+    String formattedHex = "FF" + hex.toUpperCase().replaceAll("#", "");
     return int.parse(formattedHex, radix: 16);
   }
+
   HexColor(final String hex) : super(_getColor(hex));
 }
 
@@ -65,10 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     const PrimaryColor = Color(0xFFFFFFFF);
-    var IconColor = HexColor("#2CA7C9");
     var BgColor = HexColor("#B71918");
-    var hvColor = HexColor("#2896B4");
-    var Icolor = HexColor("#83E3FD");
 
     return Scaffold(
       appBar: PreferredSize(
@@ -80,13 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           backgroundColor: PrimaryColor,
-          title: Image.asset('assets/images/title.png',
-              width: 160, height: 40, fit: BoxFit.cover),
+          title: Image.asset(
+            'assets/images/title.png',
+            width: 160,
+            height: 40,
+            fit: BoxFit.cover,
+          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(
                 Icons.menu,
-                color: IconColor,
                 size: 30,
               ),
               onPressed: () {
@@ -96,17 +97,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: HomeCards(),
+      body: HomeCards(messages: _messages),
       floatingActionButton: FloatingActionButton.small(
         onPressed: _manualRefresh,
         backgroundColor: BgColor,
         foregroundColor: Colors.black,
-        hoverColor: hvColor,
         splashColor: Colors.white,
         tooltip: 'Refresh',
         child: Icon(
           Icons.refresh,
-          color: Icolor,
         ),
       ),
     );
