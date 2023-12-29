@@ -14,6 +14,15 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+// the class helps in defining hex colors directly
+class HexColor extends Color {
+  static int _getColor(String hex) {
+    String formattedHex =  "FF" + hex.toUpperCase().replaceAll("#", "");
+    return int.parse(formattedHex, radix: 16);
+  }
+  HexColor(final String hex) : super(_getColor(hex));
+}
+
 class _MyAppState extends State<MyApp> {
   final SmsQuery _query = SmsQuery();
   List<SmsMessage> _messages = [];
@@ -67,7 +76,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFFFFFFFF);
+    var iconColor = HexColor("#2CA7C9");
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter SMS Inbox App',
       theme: ThemeData(
         primaryColor: primaryColor,
@@ -78,7 +89,18 @@ class _MyAppState extends State<MyApp> {
           title: Image.asset('assets/images/title.png', width: 160,
             height:40,
             fit: BoxFit.cover,),
-        ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.message,
+                color: iconColor,
+                size: 29,
+              ),
+              onPressed: () {
+                // do something
+              },
+            )
+          ],),
         body: Container(
           padding: const EdgeInsets.all(10.0),
           child: _messages.isNotEmpty
