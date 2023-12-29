@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sms_autofill: ^2.0.0
+  flutter_sms_inbox: ^1.0.3
+  permission_handler: ^11.1.0
 
 
 
