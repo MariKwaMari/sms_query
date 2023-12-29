@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
 
   bool isMpesaMessage(String? body) {
     // Customize this function based on the structure of M-Pesa messages
-    return body?.contains('M-PESA') == true && body?.contains('Confirmed') == true;
+    return body?.contains('Confirmed') == true && body?.contains('received') == true && body?.contains('M-PESA') == true;
   }
 
   @override
@@ -96,7 +96,24 @@ class _MessagesListView extends StatelessWidget {
       itemCount: messages.length,
       itemBuilder: (BuildContext context, int i) {
         var message = messages[i];
+               debugPrint('${message.body}');
+               var amount = message.body?.split('received')[1]?.split('from')[0]?.trim();
+               var receipt_no = message.body?.split('Confirmed')[0]?.trim();
+               var sender = message.body?.split('from')[1]?.split("0")[0]?.trim();
+               var phone_no = message.body?.split('0')[1]?.split("on")[0]?.trim();
+               var date = message.body?.split('on')[1]?.split("at")[0]?.trim();
+               var time = message.body?.split('at')[1]?.split("New")[0]?.trim();
 
+               var data = {
+                 'amount': amount,
+                 'receipt_no': receipt_no,
+                 'sender': sender,
+                 'phone_no': phone_no,
+                 'date': date,
+                 'time': time
+               };
+
+               debugPrint(data.toString());
         return ListTile(
           title: Text('${message.sender} [${message.date}]'),
           subtitle: Text('${message.body}'),
