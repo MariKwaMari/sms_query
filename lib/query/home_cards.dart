@@ -1,28 +1,42 @@
 import 'package:flutter/material.dart';
 
+class HexColor extends Color {
+  static int _getColor(String hex) {
+    String formattedHex = "FF" + hex.toUpperCase().replaceAll("#", "");
+    return int.parse(formattedHex, radix: 16);
+  }
+
+  HexColor(final String hex) : super(_getColor(hex));
+}
+
 class HomeCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CustomScrollView(
-        primary: false,
-        slivers: <Widget>[
-          SliverPadding(
-            padding: const EdgeInsets.all(20),
-            sliver: SliverGrid.count(
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              crossAxisCount: 2,
-              children: <Widget>[
-                _buildCard('Mpesa Received', Icons.credit_card, Colors.green),
-                _buildCard('Heed not the rabble', Icons.mic, Colors.green[200] ?? Colors.green),
-                _buildCard('Sound of screams but the', Icons.mic, Colors.green[300] ?? Colors.green),
-                _buildCard('Who scream', Icons.mic, Colors.green[400] ?? Colors.green),
-              ],
-            ),
+    // Define colors outside the Scaffold
+    const PrimaryColor = Color(0xFFFFFFFF);
+    var IconColor = HexColor("#2CA7C9");
+    var BgColor = HexColor("#B71918");
+    var hvColor = HexColor("#2896B4");
+    var Icolor = HexColor("#83E3FD");
+
+    return CustomScrollView(
+      primary: false,
+      slivers: <Widget>[
+        SliverPadding(
+          padding: const EdgeInsets.all(20),
+          sliver: SliverGrid.count(
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 2,
+            children: <Widget>[
+              _buildCard('Mpesa Received', Icons.credit_card, BgColor),
+              _buildCard('Heed not the rabble', Icons.credit_card, BgColor ?? BgColor),
+              _buildCard('Sound of screams but the', Icons.credit_card, BgColor ?? BgColor),
+              _buildCard('Who scream', Icons.credit_card, BgColor ?? BgColor),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -54,4 +68,3 @@ class HomeCards extends StatelessWidget {
     );
   }
 }
-
