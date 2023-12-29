@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: 30,
               ),
               onPressed: () {
-                // do something
+                // regresh button, not working, should be placed inside where we view messeges
               },
             )
           ],
