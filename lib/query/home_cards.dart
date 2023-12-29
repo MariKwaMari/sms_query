@@ -3,61 +3,50 @@ import 'package:flutter/material.dart';
 class HomeCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var bgColor = Colors.red;
-    var hoverColor = Colors.lightBlue;
-    var iconColor = Colors.lightBlueAccent;
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Work made easy'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: GridView.count(
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 2,
-          children: <Widget>[
-            _buildCard('Mpesa Received', iconColor, bgColor),
-            _buildCard('Heed not the rabble', iconColor, bgColor),
-            _buildCard('Sound of screams but the', iconColor, bgColor),
-            _buildCard('Who scream', iconColor, bgColor),
-          ],
-        ),
+      body: CustomScrollView(
+        primary: false,
+        slivers: <Widget>[
+          SliverPadding(
+            padding: const EdgeInsets.all(20),
+            sliver: SliverGrid.count(
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: 2,
+              children: <Widget>[
+                _buildCard('Mpesa Received', Icons.credit_card, Colors.green),
+                _buildCard('Heed not the rabble', Icons.mic, Colors.green[200] ?? Colors.green),
+                _buildCard('Sound of screams but the', Icons.mic, Colors.green[300] ?? Colors.green),
+                _buildCard('Who scream', Icons.mic, Colors.green[400] ?? Colors.green),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildCard(String text, Color iconColor, Color bgColor) {
+  Widget _buildCard(String text, IconData icon, Color color) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: bgColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
+        border: Border.all(
+          color: Colors.blue,
+        ),
+        borderRadius: BorderRadius.circular(5.0),
+        color: Colors.white,
       ),
+      padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.payment,
+            icon,
             size: 40,
-            color: iconColor,
+            color: color,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             text,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -65,3 +54,4 @@ class HomeCards extends StatelessWidget {
     );
   }
 }
+
