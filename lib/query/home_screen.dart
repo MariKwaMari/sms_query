@@ -22,7 +22,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final SmsQuery _query = SmsQuery();
-  List<SmsMessage> _messages = [];
+  List<SmsMessage> mpesa_messages = [];
+  List<SmsMessage> fuliza_messages = [];
+  List<SmsMessage> mshwari_messages = [];
+  List<SmsMessage> kcb_mpesa_messages = [];
   late Timer _timer;
 
   @override
@@ -32,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _timer = Timer.periodic(const Duration(seconds: 10), (Timer t) {
       _checkForNewMessages();
     });
-
     _checkForNewMessages();
   }
 
@@ -48,14 +50,25 @@ class _HomeScreenState extends State<HomeScreen> {
       final messages = await _query.querySms(
         kinds: [SmsQueryKind.inbox],
       );
-
       debugPrint('sms inbox messages: ${messages.length}');
-
-      final filteredMessages = messages.where((message) =>
+      final MpesaMessages = messages.where((message) =>
           message.body?.contains('received') == true &&
+          message.body?.contains('M-PESA') == true &&
+          message.body?.contains('sent') == false);
+      setState(() => mpesa_messages = MpesaMessages.toList());
+      final FulizaMessages = messages.where((message) =>
+          message.body?.contains('Fuliza') == true &&
           message.body?.contains('M-PESA') == true);
-
-      setState(() => _messages = filteredMessages.toList());
+      setState(() => fuliza_messages = FulizaMessages.toList());
+      final MshwariMessages = messages.where((message) =>
+          message.body?.contains('M-SHWARI') == true);
+      setState(() => mshwari_messages = MshwariMessages.toList());
+      final KcbMpesaMessages = messages.where((message) =>
+          message.body?.contains('KCB') == true &&
+          message.body?.contains('M-PESA') == true &&
+          message.body?.contains('received') == true &&
+          message.body?.contains('sent') == false);
+      setState(() => kcb_mpesa_messages = KcbMpesaMessages.toList());
     }
   }
 
@@ -90,14 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.menu,
                 size: 30,
               ),
-              onPressed: () {
-                // regresh button, not working, should be placed inside where we view messeges
-              },
+              onPressed: _manualRefresh,
             )
           ],
         ),
       ),
-      body: HomeCards(messages: _messages),
+      body: HomeCards(messages: mpesa_messages, fuliza: fuliza_messages, mshwari: mshwari_messages, kcb_mpesa: kcb_mpesa_messages),
       floatingActionButton: FloatingActionButton.small(
         onPressed: _manualRefresh,
         backgroundColor: BgColor,
