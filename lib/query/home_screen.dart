@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'home_cards.dart';
+import 'hero_banner.dart'; // Import the HeroBanner widget
 
 class HexColor extends Color {
   static int _getColor(String hex) {
@@ -84,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
               message.body?.contains('received') == true &&
               message.body?.contains('M-PESA') == true &&
               message.body?.contains('sent') == false &&
-              message.body?.contains('reversal') == false)
+              message.body?.contains('reversal') == false &&
+              message.body?.contains('BANK') == false)
           .toList();
 
       // Update fuliza_messages based on criteria
@@ -139,64 +141,53 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0),
-        child: _buildAppBar(),
+      appBar: AppBar(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(5),
+          ),
+        ),
+        backgroundColor: PrimaryColor,
+        title: Hero(
+          tag: 'hero_banner', // Unique tag for the hero animation
+          child: HeroBanner(), // Include the HeroBanner widget here
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.menu,
+              size: 30,
+            ),
+            onPressed: _manualRefresh,
+          )
+        ],
       ),
-      body: _buildHomeCards(),
-      floatingActionButton: _buildRefreshButton(),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(5),
+      body: HomeCards(
+        messages: mpesa_messages,
+        fuliza: fuliza_messages,
+        mshwari: mshwari_messages,
+        kcb_mpesa: kcb_mpesa_messages,
+        hustler: hustler_fund_messages,
+        reversals: reversals_messages,
+        bank: bank_messages,
+        fuliza_paid: fuliza_paid_messages,
+      ),
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: _manualRefresh,
+        backgroundColor: BgColor,
+        foregroundColor: Colors.white,
+        splashColor: Colors.white,
+        tooltip: 'Refresh',
+        child: Icon(
+          Icons.refresh,
         ),
       ),
-      backgroundColor: PrimaryColor,
-      title: Image.asset(
-        'assets/images/title.png',
-        width: 160,
-        height: 40,
-        fit: BoxFit.cover,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.menu,
-            size: 30,
-          ),
-          onPressed: _manualRefresh,
-        )
-      ],
     );
   }
+}
 
-  Widget _buildHomeCards() {
-    return HomeCards(
-      messages: mpesa_messages,
-      fuliza: fuliza_messages,
-      mshwari: mshwari_messages,
-      kcb_mpesa: kcb_mpesa_messages,
-      hustler: hustler_fund_messages,
-      reversals: reversals_messages,
-      bank: bank_messages,
-      fuliza_paid: fuliza_paid_messages,
-    );
-  }
-
-  FloatingActionButton _buildRefreshButton() {
-    return FloatingActionButton.small(
-      onPressed: _manualRefresh,
-      backgroundColor: BgColor,
-      foregroundColor: Colors.white,
-      splashColor: Colors.white,
-      tooltip: 'Refresh',
-      child: Icon(
-        Icons.refresh,
-      ),
-    );
-  }
+void main() {
+  runApp(MaterialApp(
+    home: HomeScreen(),
+  ));
 }
