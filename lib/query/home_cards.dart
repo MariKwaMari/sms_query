@@ -1,4 +1,3 @@
-// home_cards.dart
 import 'package:flutter/material.dart';
 import 'messages_list_view.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
@@ -22,8 +21,16 @@ class HomeCards extends StatelessWidget {
   final List<SmsMessage> hustler;
   final List<SmsMessage> fuliza_paid;
 
-
-  HomeCards({required this.messages, required this.fuliza, required this.mshwari, required this.kcb_mpesa, required this.hustler, required this.reversals, required this.bank, required this.fuliza_paid});
+  HomeCards({
+    required this.messages,
+    required this.fuliza,
+    required this.mshwari,
+    required this.kcb_mpesa,
+    required this.hustler,
+    required this.reversals,
+    required this.bank,
+    required this.fuliza_paid,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +46,16 @@ class HomeCards extends StatelessWidget {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             crossAxisCount: 2,
+            childAspectRatio: 1.5, // Adjust this ratio to make cards look like rectangles
             children: <Widget>[
-              _buildCard('MPESA Received', Icons.credit_card, BgColor, context),
-              _buildCard('MSHWARI Received', Icons.credit_card, BgColor, context),
-              _buildCard('FULIZA Received', Icons.credit_card, BgColor, context),
-              _buildCard('FULIZA Paid', Icons.credit_card, BgColor, context),
-              _buildCard('KCB MPESA Received', Icons.credit_card, BgColor, context),
-              _buildCard('Reversals Received', Icons.credit_card, BgColor, context),
-              _buildCard('Bank Received', Icons.credit_card, BgColor, context),
-              _buildCard('Hustler Fund Received', Icons.credit_card, BgColor, context),
+              _buildCard('MPESA Received', Icons.monetization_on, BgColor, context),
+              _buildCard('MSHWARI Received', Icons.account_balance_wallet, BgColor, context),
+              _buildCard('FULIZA Received', Icons.payment, BgColor, context),
+              _buildCard('FULIZA Paid', Icons.attach_money, BgColor, context),
+              _buildCard('KCB MPESA Received', Icons.business, BgColor, context),
+              _buildCard('Reversals Received', Icons.swap_horizontal_circle, BgColor, context),
+              _buildCard('Bank Received', Icons.account_balance, BgColor, context),
+              _buildCard('Hustler Fund Received', Icons.star, BgColor, context),
             ],
           ),
         ),
@@ -108,9 +116,9 @@ class HomeCards extends StatelessWidget {
       case 'Reversals Received':
         return reversals;
       case 'Bank Received':
-        return fuliza_paid;
+        return bank;
       case 'Hustler Fund Received':
-        return reversals;
+        return hustler;
       default:
         return [];
     }

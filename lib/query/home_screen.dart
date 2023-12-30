@@ -30,8 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<SmsMessage> hustler_fund_messages = [];
   List<SmsMessage> reversals_messages = [];
   List<SmsMessage> fuliza_paid_messages = [];
-
   late Timer _timer;
+
+  static const PrimaryColor = Color(0xFFFFFFFF);
+  final BgColor = HexColor("#B71918");
 
   @override
   void initState() {
@@ -49,50 +51,85 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _checkForNewMessages() async {
+  Future<void> _checkForNewMessages() async {
     var permission = await Permission.sms.status;
     if (permission.isGranted) {
       final messages = await _query.querySms(
         kinds: [SmsQueryKind.inbox],
       );
       debugPrint('sms inbox messages: ${messages.length}');
-      final MpesaMessages = messages.where((message) =>
-          message.body?.contains('received') == true &&
-          message.body?.contains('M-PESA') == true &&
-          message.body?.contains('sent') == false &&
-          message.body?.contains('reversal') == false &&
-          message.body?.contains('BANK') == false);
-      setState(() => mpesa_messages = MpesaMessages.toList());
-      final FulizaMessages = messages.where((message) =>
-          message.body?.contains('Fuliza') == true &&
-          message.body?.contains('M-PESA') == true &&
-          message.body?.contains('partially') == false);
-      setState(() => fuliza_messages = FulizaMessages.toList());
-      final MshwariMessages = messages.where((message) =>
-          message.body?.contains('M-SHWARI') == true);
-      setState(() => mshwari_messages = MshwariMessages.toList());
-      final FulizaPaidMessages = messages.where((message) =>
-            message.body?.contains('Fuliza') == true &&
-            message.body?.contains('partially') == true);
-       setState(() => fuliza_paid_messages = FulizaPaidMessages.toList());
-       final ReversalsMessages = messages.where((message) =>
-            message.body?.contains('reversal') == true);
-       setState(() => reversals_messages = ReversalsMessages.toList());
-       final HustlerMessages = messages.where((message) =>
-            message.body?.contains('hustler') == true);
-       setState(() => hustler_fund_messages = HustlerMessages.toList());
-       final BankMessages = messages.where((message) =>
-         message.body?.contains('received') == true &&
-         message.body?.contains('M-PESA') == true &&
-         message.body?.contains('BANK') == true);
-       setState(() => bank_messages = BankMessages.toList());
-       final KcbMpesaMessages = messages.where((message) =>
-          message.body?.contains('KCB') == true &&
-          message.body?.contains('M-PESA') == true &&
-          message.body?.contains('received') == true &&
-          message.body?.contains('sent') == false);
-       setState(() => kcb_mpesa_messages = KcbMpesaMessages.toList());
+      _updateMessageLists(messages);
+    } else {
+      // Request SMS permission
+      await _requestSmsPermission();
     }
+  }
+
+  Future<void> _requestSmsPermission() async {
+    var status = await Permission.sms.request();
+    if (status.isGranted) {
+      // Permission granted, reload messages
+      _checkForNewMessages();
+    } else {
+      // Handle the case when permission is denied
+      // You can show a dialog or guide the user to settings
+    }
+  }
+
+  void _updateMessageLists(List<SmsMessage> messages) {
+    setState(() {
+      // Update mpesa_messages based on criteria
+      mpesa_messages = messages
+          .where((message) =>
+              message.body?.contains('received') == true &&
+              message.body?.contains('M-PESA') == true &&
+              message.body?.contains('sent') == false &&
+              message.body?.contains('reversal') == false)
+          .toList();
+
+      // Update fuliza_messages based on criteria
+      fuliza_messages = messages
+          .where((message) =>
+              message.body?.contains('Fuliza') == true &&
+              message.body?.contains('partially') == false)
+          .toList();
+
+      // Update mshwari_messages based on criteria
+      mshwari_messages =
+          messages.where((message) => message.body?.contains('M-SHWARI') == true).toList();
+
+      // Update fuliza_paid_messages based on criteria
+      fuliza_paid_messages = messages
+          .where((message) =>
+              message.body?.contains('Fuliza') == true &&
+              message.body?.contains('partially') == true)
+          .toList();
+
+      // Update reversals_messages based on criteria
+      reversals_messages =
+          messages.where((message) => message.body?.contains('reversal') == true).toList();
+
+      // Update hustler_fund_messages based on criteria
+      hustler_fund_messages =
+          messages.where((message) => message.body?.contains('hustler') == true).toList();
+
+      // Update bank_messages based on criteria
+      bank_messages = messages
+          .where((message) =>
+              message.body?.contains('received') == true &&
+              message.body?.contains('M-PESA') == true &&
+              message.body?.contains('BANK') == true)
+          .toList();
+
+      // Update kcb_mpesa_messages based on criteria
+      kcb_mpesa_messages = messages
+          .where((message) =>
+              message.body?.contains('KCB') == true &&
+              message.body?.contains('M-PESA') == true &&
+              message.body?.contains('received') == true &&
+              message.body?.contains('sent') == false)
+          .toList();
+    });
   }
 
   void _manualRefresh() {
@@ -101,50 +138,64 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const PrimaryColor = Color(0xFFFFFFFF);
-    var BgColor = HexColor("#B71918");
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
-        child: AppBar(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(5),
-            ),
-          ),
-          backgroundColor: PrimaryColor,
-          title: Image.asset(
-            'assets/images/title.png',
-            width: 160,
-            height: 40,
-            fit: BoxFit.cover,
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.menu,
-                size: 30,
-              ),
-              onPressed: _manualRefresh,
-            )
-          ],
+        child: _buildAppBar(),
+      ),
+      body: _buildHomeCards(),
+      floatingActionButton: _buildRefreshButton(),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(5),
         ),
       ),
-      body: HomeCards(
-          messages: mpesa_messages, fuliza: fuliza_messages, mshwari: mshwari_messages,
-           kcb_mpesa: kcb_mpesa_messages, hustler: hustler_fund_messages,
-           reversals: reversals_messages, bank: bank_messages, fuliza_paid: fuliza_paid_messages,
-           ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: _manualRefresh,
-        backgroundColor: BgColor,
-        foregroundColor: Colors.black,
-        splashColor: Colors.white,
-        tooltip: 'Refresh',
-        child: Icon(
-          Icons.refresh,
-        ),
+      backgroundColor: PrimaryColor,
+      title: Image.asset(
+        'assets/images/title.png',
+        width: 160,
+        height: 40,
+        fit: BoxFit.cover,
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.menu,
+            size: 30,
+          ),
+          onPressed: _manualRefresh,
+        )
+      ],
+    );
+  }
+
+  Widget _buildHomeCards() {
+    return HomeCards(
+      messages: mpesa_messages,
+      fuliza: fuliza_messages,
+      mshwari: mshwari_messages,
+      kcb_mpesa: kcb_mpesa_messages,
+      hustler: hustler_fund_messages,
+      reversals: reversals_messages,
+      bank: bank_messages,
+      fuliza_paid: fuliza_paid_messages,
+    );
+  }
+
+  FloatingActionButton _buildRefreshButton() {
+    return FloatingActionButton.small(
+      onPressed: _manualRefresh,
+      backgroundColor: BgColor,
+      foregroundColor: Colors.white,
+      splashColor: Colors.white,
+      tooltip: 'Refresh',
+      child: Icon(
+        Icons.refresh,
       ),
     );
   }
