@@ -26,6 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<SmsMessage> fuliza_messages = [];
   List<SmsMessage> mshwari_messages = [];
   List<SmsMessage> kcb_mpesa_messages = [];
+  List<SmsMessage> bank_messages = [];
+  List<SmsMessage> hustler_fund_messages = [];
+  List<SmsMessage> reversals_messages = [];
+  List<SmsMessage> fuliza_paid_messages = [];
+
   late Timer _timer;
 
   @override
@@ -54,21 +59,39 @@ class _HomeScreenState extends State<HomeScreen> {
       final MpesaMessages = messages.where((message) =>
           message.body?.contains('received') == true &&
           message.body?.contains('M-PESA') == true &&
-          message.body?.contains('sent') == false);
+          message.body?.contains('sent') == false &&
+          message.body?.contains('reversal') == false &&
+          message.body?.contains('BANK') == false);
       setState(() => mpesa_messages = MpesaMessages.toList());
       final FulizaMessages = messages.where((message) =>
           message.body?.contains('Fuliza') == true &&
-          message.body?.contains('M-PESA') == true);
+          message.body?.contains('M-PESA') == true &&
+          message.body?.contains('partially') == false);
       setState(() => fuliza_messages = FulizaMessages.toList());
       final MshwariMessages = messages.where((message) =>
           message.body?.contains('M-SHWARI') == true);
       setState(() => mshwari_messages = MshwariMessages.toList());
-      final KcbMpesaMessages = messages.where((message) =>
+      final FulizaPaidMessages = messages.where((message) =>
+            message.body?.contains('Fuliza') == true &&
+            message.body?.contains('partially') == true);
+       setState(() => fuliza_paid_messages = FulizaPaidMessages.toList());
+       final ReversalsMessages = messages.where((message) =>
+            message.body?.contains('reversal') == true);
+       setState(() => reversals_messages = ReversalsMessages.toList());
+       final HustlerMessages = messages.where((message) =>
+            message.body?.contains('hustler') == true);
+       setState(() => hustler_fund_messages = HustlerMessages.toList());
+       final BankMessages = messages.where((message) =>
+         message.body?.contains('received') == true &&
+         message.body?.contains('M-PESA') == true &&
+         message.body?.contains('BANK') == true);
+       setState(() => bank_messages = BankMessages.toList());
+       final KcbMpesaMessages = messages.where((message) =>
           message.body?.contains('KCB') == true &&
           message.body?.contains('M-PESA') == true &&
           message.body?.contains('received') == true &&
           message.body?.contains('sent') == false);
-      setState(() => kcb_mpesa_messages = KcbMpesaMessages.toList());
+       setState(() => kcb_mpesa_messages = KcbMpesaMessages.toList());
     }
   }
 
@@ -108,7 +131,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: HomeCards(messages: mpesa_messages, fuliza: fuliza_messages, mshwari: mshwari_messages, kcb_mpesa: kcb_mpesa_messages),
+      body: HomeCards(
+          messages: mpesa_messages, fuliza: fuliza_messages, mshwari: mshwari_messages,
+           kcb_mpesa: kcb_mpesa_messages, hustler: hustler_fund_messages,
+           reversals: reversals_messages, bank: bank_messages, fuliza_paid: fuliza_paid_messages,
+           ),
       floatingActionButton: FloatingActionButton.small(
         onPressed: _manualRefresh,
         backgroundColor: BgColor,

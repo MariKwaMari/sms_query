@@ -17,8 +17,13 @@ class HomeCards extends StatelessWidget {
   final List<SmsMessage> fuliza;
   final List<SmsMessage> mshwari;
   final List<SmsMessage> kcb_mpesa;
+  final List<SmsMessage> bank;
+  final List<SmsMessage> reversals;
+  final List<SmsMessage> hustler;
+  final List<SmsMessage> fuliza_paid;
 
-  HomeCards({required this.messages, required this.fuliza, required this.mshwari, required this.kcb_mpesa});
+
+  HomeCards({required this.messages, required this.fuliza, required this.mshwari, required this.kcb_mpesa, required this.hustler, required this.reversals, required this.bank, required this.fuliza_paid});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,11 @@ class HomeCards extends StatelessWidget {
               _buildCard('MPESA Received', Icons.credit_card, BgColor, context),
               _buildCard('MSHWARI Received', Icons.credit_card, BgColor, context),
               _buildCard('FULIZA Received', Icons.credit_card, BgColor, context),
+              _buildCard('FULIZA Paid', Icons.credit_card, BgColor, context),
               _buildCard('KCB MPESA Received', Icons.credit_card, BgColor, context),
+              _buildCard('Reversals Received', Icons.credit_card, BgColor, context),
+              _buildCard('Bank Received', Icons.credit_card, BgColor, context),
+              _buildCard('Hustler Fund Received', Icons.credit_card, BgColor, context),
             ],
           ),
         ),
@@ -94,6 +103,14 @@ class HomeCards extends StatelessWidget {
         return fuliza;
       case 'KCB MPESA Received':
         return kcb_mpesa;
+      case 'FULIZA Paid':
+        return fuliza_paid;
+      case 'Reversals Received':
+        return reversals;
+      case 'Bank Received':
+        return fuliza_paid;
+      case 'Hustler Fund Received':
+        return reversals;
       default:
         return [];
     }
