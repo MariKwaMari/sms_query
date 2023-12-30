@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'home_cards.dart';
-import 'hero_banner.dart'; // Import the HeroBanner widget
+import '/components/hero_banner.dart'; // Import the HeroBanner widget
 
 class HexColor extends Color {
   static int _getColor(String hex) {
