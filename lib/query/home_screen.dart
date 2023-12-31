@@ -80,45 +80,51 @@ class _HomeScreenState extends State<HomeScreen> {
   void _updateMessageLists(List<SmsMessage> messages) {
     setState(() {
       // Update mpesa_messages based on criteria
+//       sender = messages.where((message) => debugPrint(message.sender)
       mpesa_messages = messages
           .where((message) =>
-              message.body?.contains('received') == true &&
+              message.body?.contains("kindly forward") == false &&
+              message.body?.contains("received") == true &&
+              message.body?.contains("sent") == false &&
               message.body?.contains('M-PESA') == true &&
-              message.body?.contains('sent') == false &&
-              message.body?.contains('reversal') == false &&
               message.body?.contains('BANK') == false)
           .toList();
 
       // Update fuliza_messages based on criteria
       fuliza_messages = messages
           .where((message) =>
-              message.body?.contains('Fuliza') == true &&
+             
+              message.body?.contains("Fuliza M-PESA amount is") == true &&
+               message.body?.contains('Failed') == false &&
               message.body?.contains('partially') == false)
           .toList();
 
       // Update mshwari_messages based on criteria
       mshwari_messages =
+        
           messages.where((message) => message.body?.contains('M-SHWARI') == true).toList();
 
       // Update fuliza_paid_messages based on criteria
       fuliza_paid_messages = messages
           .where((message) =>
-              message.body?.contains('Fuliza') == true &&
-              message.body?.contains('partially') == true)
+               
+              message.body?.contains("has been used to partially") == true &&
+              message.body?.contains('Fuliza') == true)
           .toList();
 
       // Update reversals_messages based on criteria
       reversals_messages =
-          messages.where((message) => message.body?.contains('reversal') == true).toList();
+          messages.where((message) =>  message.body?.contains('reversal') == true).toList();
 
       // Update hustler_fund_messages based on criteria
       hustler_fund_messages =
-          messages.where((message) => message.body?.contains('hustler') == true).toList();
+          messages.where((message) =>  message.body?.contains('hustler') == true).toList();
 
       // Update bank_messages based on criteria
       bank_messages = messages
           .where((message) =>
-              message.body?.contains('received') == true &&
+            
+              message.body?.contains("You have received") == true &&
               message.body?.contains('M-PESA') == true &&
               message.body?.contains('BANK') == true)
           .toList();
