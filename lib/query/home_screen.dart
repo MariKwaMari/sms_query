@@ -154,9 +154,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         backgroundColor: PrimaryColor,
-        title: Hero(
-          tag: 'hero_banner', // Unique tag for the hero animation
-          child: HeroBanner(), // Include the HeroBanner widget here
+        title: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right:10.0),
+              child: Icon(Icons.message, size: 30, color: Color.fromRGBO(183, 25, 24, 1)),
+            ),
+            GradientText(
+              'Mpesa SMS Query',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              gradient: LinearGradient(colors: [
+                Color.fromRGBO(183, 25, 24, 1),
+                Color.fromRGBO(40, 150, 180, 1)
+              ]),
+            ),
+
+          ],
         ),
         actions: <Widget>[
           IconButton(
@@ -188,6 +201,30 @@ class _HomeScreenState extends State<HomeScreen> {
           Icons.refresh,
         ),
       ),
+    );
+  }
+}
+
+// styles the appbar text
+class GradientText extends StatelessWidget {
+  const GradientText(
+      this.text, {
+        required this.gradient,
+        this.style,
+      });
+
+  final String text;
+  final TextStyle? style;
+  final Gradient gradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderMask(
+      blendMode: BlendMode.srcIn,
+      shaderCallback: (bounds) => gradient.createShader(
+        Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+      ),
+      child: Text(text, style: style),
     );
   }
 }
